@@ -8,11 +8,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  int currentPage = 0;
+  int currentPage = 1;
+  final PageController pageController = new PageController( initialPage: 1 );
 
-   @override
-   Widget build(BuildContext context) {
-   return Scaffold(
+
+  @override
+  Widget build(BuildContext context) {
+  return Scaffold(
       //* AppBar
       appBar: AppBar(
         title: Text('Hola mundo $currentPage'),
@@ -21,17 +23,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
       //? Cambiar la pantalla
         body: PageView(
+          controller: pageController,
+          physics: NeverScrollableScrollPhysics(),
           children: [
             CustomScreen( color: Colors.blue ),
             CustomScreen( color: Colors.pink ),
             CustomScreen( color: Colors.indigo ),
           ],
         ),
+      // body: currentPage == 0
+      //       ? CustomScreen(color:  Colors.pink )
+      //       : currentPage == 1 
+      //           ? CustomScreen(color:  Colors.indigo )
+      //           : CustomScreen(color:  Colors.green ),
+
+        
       //* Tabs
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentPage,
           onTap: (index) {
             currentPage = index;
+
+            pageController.animateToPage(index, 
+              duration: Duration( milliseconds: 300 ), 
+              curve: Curves.easeOut
+            );
 
             setState(() {});
           },
@@ -46,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarItem(
               icon: Icon( Icons.settings ),
               label: 'Settings'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon( Icons.car_rental_outlined ),
+              label: 'Cart'
             ),
           ],
         ),
